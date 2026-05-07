@@ -58,34 +58,20 @@ PARGO_API_KEY=your_key
 
 Project Structure
 harvestpulse/
-├── src/
-│   ├── screens/
-│   │   ├── ConsumerHome.jsx       # Live auction browse + bidding
-│   │   ├── FarmerDashboard.jsx    # Earnings, metrics, quick post
-│   │   ├── PostHarvest.jsx        # Create a listing
-│   │   ├── ActiveListings.jsx     # Live auctions tracker
-│   │   └── SalesHistory.jsx       # Past auction records
-│   ├── components/
-│   │   ├── AuctionCard.jsx        # Individual auction tile
-│   │   ├── BidPanel.jsx           # Real-time bid sidebar
-│   │   ├── LiveFeed.jsx           # Scrolling bid feed
-│   │   └── CountdownTimer.jsx     # Auction countdown
-│   ├── services/
-│   │   ├── firebase.js            # DB + auth config
-│   │   ├── bidService.js          # Bid logic + validation
-│   │   ├── notificationService.js # OneSignal push alerts
-│   │   └── paymentService.js      # Ozow integration
-│   └── utils/
-│       ├── geoFilter.js           # Nearby auction filtering
-│       └── formatters.js          # Currency + time helpers
-├── functions/                     # Firebase Cloud Functions
-│   ├── auctionClose.js            # Atomic auction settlement
-│   ├── bidValidation.js           # Server-side bid checks
-│   └── deliveryCoordinator.js     # Pargo/Picup routing
-├── .env.example
-├── .gitignore
-├── firestore.rules                # Security rules
-└── README.md
+├── index.php              ← The entire app (one page, 3 screens)
+├── setup.sql              ← Run this FIRST in phpMyAdmin
+├── includes/
+│   └── db.php             ← Database connection config
+├── api/
+│   ├── listings.php       ← GET all live auctions
+│   ├── bid.php            ← POST a bid (validates server-side)
+│   ├── get_bids.php       ← GET bid history for a listing
+│   ├── post_listing.php   ← POST a new farmer listing
+│   └── farmer_stats.php   ← GET farmer dashboard data
+├── css/
+│   └── style.css
+└── js/
+    └── app.js
 
 Security
 HarvestPulse was built following a full Secure System Development Cycle (SSDC):
