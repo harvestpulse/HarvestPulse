@@ -98,6 +98,9 @@ POPIA compliant, user consent on registration, data deletion on request
 Rate limiting on auction endpoints, max 10 bids/minute per user
 All API keys stored in Cloud Function environment variables, never in client-side code
 
+How to run:
+cd .\harvestpulse
+php -S localhost:8000
 
 Team
 Built at VUT Hackathon 2026 in 24 hours by the HarvestPulse team.
