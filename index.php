@@ -1,3 +1,69 @@
+<?php
+session_start();
+include "connection.php";
+
+if (!isset($_SESSION['farmer_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$farmer_id = $_SESSION['farmer_id'];
+$username = $_SESSION['name'];
+
+
+/* TOTAL SALES */
+$query = "
+SELECT COUNT(*) AS total_sales
+FROM sales
+WHERE farmer_id = '$farmer_id'
+";
+
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$totalSales = $row['total_sales'] ?? 0;
+
+
+/* TOTAL MONEY MADE THIS WEEK */
+$query = "
+SELECT SUM(sale_amount) AS weekly_total
+FROM sales
+WHERE farmer_id = '$farmer_id'
+AND YEARWEEK(sale_date, 1) = YEARWEEK(CURDATE(), 1)
+";
+
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$weeklyTotal = $row['weekly_total'] ?? 0;
+
+
+/* USER RATING */
+$query = "
+SELECT rating
+FROM farmer
+WHERE farmer_id = '$farmer_id'
+";
+
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$userRating = $row['rating'] ?? 0;
+
+
+/* TOTAL LISTINGS */
+$query = "
+SELECT COUNT(*) AS total_listings
+FROM harvest
+WHERE username = ?
+";
+
+$stmt = mysqli_prepare($conn, $query);
+mysqli_stmt_bind_param($stmt, "s", $username);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$row = mysqli_fetch_assoc($result);
+$totalListings = $row['total_listings'] ?? 0;
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,13 +79,22 @@
   <div class="logo"><span class="logo-dot"></span>HarvestPulse</div>
   <div class="nav-tabs">
     <a class="nav-tab active" href = "index.php">Home</a>
-    <a class="nav-tab" href = "browseAuctions.html">Browse Auctions</a>
+    <a class="nav-tab" href = "browse_auction.php">Browse Auctions</a>
     <a class="nav-tab" href = "dashboard.php" >Farmer Dashboard</a>
   </div>
   <div class="nav-right">
-    <div class="live-badge"><span class="live-dot"></span><span id="liveCount">4 live</span></div>
-    <div class="user-chip" onclick="switchScreen('consumer')"><div class="user-av">TM</div>Thandi M.</div>
-  </div>
+        <div class="live-badge">
+            <span class="live-dot"></span>
+            <span id="liveCount"><?php echo $totalListings; ?> live listings</span>
+        </div>
+
+        <div class="user-chip">
+            <div class="user-av">
+                <?php echo strtoupper(substr($_SESSION['name'], 0, 1)); ?>
+            </div>
+            <?php echo $_SESSION['name']; ?>
+        </div>
+    </div>
 </nav>
 
 <body>
@@ -30,7 +105,7 @@
       <div class="onboard-title">Welcome to HarvestPulse</div>
       <div class="onboard-sub">South Africa's first live farm-to-buyer auction platform. Farmers post fresh harvests. You bid in real time. Everyone wins.</div>
       <div class="onboard-btns">
-        <a class="onboard-btn ob-primary" href = "browseAuctions.html">Browse Live Auctions 🔥</a>
+        <a class="onboard-btn ob-primary" href = "browse_auction.php">Browse Live Auctions 🔥</a>
         <a class="onboard-btn ob-secondary" href = "dashboard.php">I'm a Farmer — Post a Harvest</a>
       </div>
       <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">

@@ -26,7 +26,7 @@ $username = $_SESSION['name'];
     <div class="nav-tabs">
 
         <a class="nav-tab" href="index.php">Home</a>
-        <a class="nav-tab" href="browseAuctions.html">Browse Auctions</a>
+        <a class="nav-tab" href="browse_auction.php">Browse Auctions</a>
         <a class="nav-tab active" href="dashboard.php">Farmer Dashboard</a>
     </div>
     <div class="nav-right">
@@ -44,7 +44,13 @@ $username = $_SESSION['name'];
 
 
 
+
 <body>
+    <script src="post_a_harvest.js">
+
+    </script>
+
+
     <div class="dashboard-layout">
 
         <!-- SIDE NAV -->
@@ -55,7 +61,7 @@ $username = $_SESSION['name'];
                 📊Dashboard
             </a>
 
-            <a href="post_a_harvest.php" class="side-link active">
+            <a href="post_a_harvest.php" class="side-link">
                 ➕ Post a Harvest
             </a>
 
@@ -63,7 +69,7 @@ $username = $_SESSION['name'];
                 🔥Active Listings
             </a>
 
-            <a href="#" class="side-link">
+            <a href="sales_history.php" class="side-link active">
                 📋 Sales History
             </a>
 
@@ -75,16 +81,15 @@ $username = $_SESSION['name'];
 
 
         <!-- MAIN CONTENT -->
-        
+        <main class="dashboard-content">
 
+            <div class="card-panel">
+            </div>
 
-          
-
-    
-
-        
+    </main>
 
     </div>
-    
+
 </body>
+
 </html>

@@ -149,9 +149,9 @@ if (isset($_POST['go_live'])) {
     <div class="logo"><span class="logo-dot"></span>HarvestPulse</div>
     <div class="nav-tabs">
 
-        <a class="nav-tab" href="index.html">Home</a>
-        <a class="nav-tab" href="browseAuctions.html">Browse Auctions</a>
-        <a class="nav-tab active" href="farmerDashboard.html">Farmer Dashboard</a>
+        <a class="nav-tab" href="index.php">Home</a>
+        <a class="nav-tab" href="browse_auction.php">Browse Auctions</a>
+        <a class="nav-tab active" href="dashboard.php">Farmer Dashboard</a>
     </div>
     <div class="nav-right">
         <div class="user-chip">
@@ -190,7 +190,7 @@ if (isset($_POST['go_live'])) {
                 🔥Active Listings
             </a>
 
-            <a href="#" class="side-link">
+            <a href="sales_history.php" class="side-link">
                 📋 Sales History
             </a>
 

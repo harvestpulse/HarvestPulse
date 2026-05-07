@@ -11,8 +11,8 @@ SELECT
     harvest.username,
     harvest.crop_name,
     farmer.location,
-
     harvest.created_at
+
 
 FROM harvest
 
@@ -22,6 +22,8 @@ ON harvest.farmer_id = farmer.farmer_id
 WHERE harvest.farmer_id = ?
 
 ORDER BY harvest.created_at DESC
+
+
 ";
 
 $stmt = mysqli_prepare($conn, $query);
@@ -29,6 +31,7 @@ mysqli_stmt_bind_param($stmt, "i", $farmer_id);
 mysqli_stmt_execute($stmt);
 
 $harvests = mysqli_stmt_get_result($stmt);
+$totalListings = mysqli_num_rows($harvests);
 ?>
 
 <!DOCTYPE html>
@@ -46,12 +49,18 @@ $harvests = mysqli_stmt_get_result($stmt);
     <div class="logo"><span class="logo-dot"></span>HarvestPulse</div>
     <div class="nav-tabs">
         <a class="nav-tab" href="index.php">Home</a>
-        <a class="nav-tab" href="browseAuctions.html">Browse Auctions</a>
+        <a class="nav-tab" href="browse_auction.php">Browse Auctions</a>
         <a class="nav-tab active" href="dashboard.php">Farmer Dashboard</a>
     </div>
-    <div class="nav-right">
-        <div class="user-chip">
 
+
+    <div class="nav-right">
+        <div class="live-badge">
+            <span class="live-dot"></span>
+            <span id="liveCount"><?php echo $totalListings; ?> live listings</span>
+        </div>
+
+        <div class="user-chip">
             <div class="user-av">
                 <?php echo strtoupper(substr($_SESSION['name'], 0, 1)); ?>
             </div>
@@ -93,7 +102,7 @@ $harvests = mysqli_stmt_get_result($stmt);
         <!-- MAIN CONTENT -->
         <main class="dashboard-content">
             <div class="panel-title">Active Listings</div>
-            <div class="panel-sub">[3] auctions running · Updated live</div>
+            <div class="panel-sub"><?php echo $totalListings; ?> auctions running · Updated live</div>
             <div class="card-panel">
 
     <?php if (mysqli_num_rows($harvests) > 0): ?>

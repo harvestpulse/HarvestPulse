@@ -1,3 +1,4 @@
+@import url('https://googleapis.com');
 :root {
   --green: #1a7a4a;
   --green-light: #22a060;
@@ -125,19 +126,6 @@ body {
 }
 .filter-chip:hover, .filter-chip.on { border-color: var(--green); background: var(--green-faint); color: var(--green-dark); }
 
-.auction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-
-.auction-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: var(--shadow);
-}
-.auction-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--green); }
-.auction-card.selected { border-color: var(--green); border-width: 2px; box-shadow: 0 0 0 4px var(--green-glow); }
 
 .card-img {
   height: 130px;
@@ -292,7 +280,7 @@ body {
   border-radius: 14px; padding: 18px; box-shadow: var(--shadow);
 }
 .mc-label { font-size: 11px; color: var(--ink4); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.mc-val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--ink); }
+.mc-val { font-family: "Open Sans", Arial, sans-serif; font-size: 26px; font-weight: 800; color: var(--ink); }
 .mc-sub { font-size: 11px; color: var(--green); font-weight: 500; margin-top: 2px; }
 .mc-icon { font-size: 20px; margin-bottom: 8px; }
 

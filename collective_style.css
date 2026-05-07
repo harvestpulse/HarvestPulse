@@ -6,6 +6,8 @@ a{text-decoration:none ;}
     min-height:calc(100vh - 70px);
 }
 
+
+.mc-val{font-family: "Open Sans", Arial, sans-serif;font-weight: 800;}
 .side-nav{
     width:250px;
     background:#14532d;
@@ -26,11 +28,8 @@ a{text-decoration:none ;}
 .side-link{
     text-decoration:none;
     color:white;
-
     padding:12px 15px;
-
     border-radius:10px;
-
     transition:0.3s;
 }
 
@@ -60,7 +59,6 @@ a{text-decoration:none ;}
     color: var(--green-dark);
     border-width: 2px;
 }
-
 
 .produce-grid{
   display:grid;
@@ -97,3 +95,61 @@ a{text-decoration:none ;}
   font-size:14px;
   font-weight:600;
 }
+
+
+
+.panel{display:inline-block;}
+
+#left_panel{width: 80%;}
+
+
+
+.auction-grid{display: flex;}
+
+
+.auction-card{background-color: white; border-radius: 20px;
+     padding:20px; width:200px; display: inline;
+     box-shadow: wheat;
+     margin: 5px;
+     box-shadow: 
+    2px 2px 4px rgba(117, 117, 117, 0.8), 
+    -2px -2px 4px rgba(117, 117, 117, 0.8);
+
+    
+
+}
+
+.info{width: max-content;}
+
+
+        .auctions-panel {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+            padding: 30px;
+        }
+
+        .left-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .right-panel {
+            width: 320px;
+            position: sticky;
+            top: 20px;
+        }
+
+       
+
+        @media(max-width: 900px) {
+            .auctions-panel {
+                flex-direction: column;
+            }
+
+            .right-panel {
+                width: 100%;
+            }
+
+          
+        }
