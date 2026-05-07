@@ -85,7 +85,7 @@ Rate limiting on auction endpoints, max 10 bids/minute per user
 All API keys stored in Cloud Function environment variables, never in client-side code
 
 How to run:
-cd .\harvestpulse
+cd C:\xampp\htdocs\harvestpulse\harvestpulse
 php -S localhost:8000
 
 Team
