@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HarvestPulse — Live Farm Auctions</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="style.css" rel = "stylesheet">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo"><span class="logo-dot"></span>HarvestPulse</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchScreen('onboard')">Home</button>
+    <button class="navclass="nav-tab"-tab" onclick="switchScreen('consumer')">Browse Auctions</button>
+    <button  onclick="switchScreen('farmer')">Farmer Dashboard</button>
+  </div>
+  <div class="nav-right">
+    <div class="live-badge"><span class="live-dot"></span><span id="liveCount">4 live</span></div>
+    <div class="user-chip" onclick="switchScreen('consumer')"><div class="user-av">TM</div>Thandi M.</div>
+  </div>
+</nav>
+
+<!-- ONBOARD -->
+<div class="screen active" id="screen-onboard">
+  <div class="onboard-wrap">
+    <div class="onboard-card">
+      <div class="onboard-emoji">🌱</div>
+      <div class="onboard-title">Welcome to HarvestPulse</div>
+      <div class="onboard-sub">South Africa's first live farm-to-buyer auction platform. Farmers post fresh harvests. You bid in real time. Everyone wins.</div>
+      <div class="onboard-btns">
+        <button class="onboard-btn ob-primary" onclick="switchScreen('consumer')">Browse Live Auctions 🔥</button>
+        <button class="onboard-btn ob-secondary" onclick="switchScreen('farmer')">I'm a Farmer — Post a Harvest</button>
+      </div>
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green-dark);">R50B</div><div style="font-size:11px;color:var(--ink4);margin-top:2px;">Fresh produce market</div></div>
+        <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green-dark);">55%</div><div style="font-size:11px;color:var(--ink4);margin-top:2px;">Below retail prices</div></div>
+        <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green-dark);">2×</div><div style="font-size:11px;color:var(--ink4);margin-top:2px;">Farmer earnings</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONSUMER -->
+<div class="screen" id="screen-consumer">
+  <div class="consumer-layout">
+    <div class="auctions-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Live Auctions</div>
+          <div class="panel-sub">Gauteng region · Updated every few seconds</div>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-chip on" onclick="toggleFilter(this)">All</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Vegetables</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Fruit</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Organic</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Ending soon</div>
+        <div class="filter-chip" onclick="toggleFilter(this)">Bulk</div>
+      </div>
+      <div class="auction-grid" id="auctionGrid"></div>
+    </div>
+    <div class="bid-panel" id="bidPanel">
+      <div class="bid-panel-empty" id="bidPanelEmpty">
+        <div class="bid-panel-empty-icon">👆</div>
+        <div class="bid-panel-empty-text">Select any auction to start bidding in real time</div>
+      </div>
+      <div class="bid-panel-content" id="bidPanelContent" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FARMER -->
+<div class="screen" id="screen-farmer">
+  <div class="farmer-layout">
+    <div class="farmer-sidebar">
+      <div style="padding:12px;margin-bottom:8px;">
+        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--white);">Nkosi Family Farm</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;">Bronkhorstspruit · Verified</div>
+      </div>
+      <div class="fsb-title">Menu</div>
+      <div class="fsb-item active" onclick="farmerTab('dashboard',this)"><span class="fsb-icon">📊</span>Dashboard</div>
+      <div class="fsb-item" onclick="farmerTab('post',this)"><span class="fsb-icon">➕</span>Post a Harvest</div>
+      <div class="fsb-item" onclick="farmerTab('active',this)"><span class="fsb-icon">🔥</span>Active Listings<span class="fsb-badge">3</span></div>
+      <div class="fsb-item" onclick="farmerTab('history',this)"><span class="fsb-icon">📋</span>Sales History</div>
+      <div style="margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);">
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">This week's earnings</div>
+        <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--white);">R1,840</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">↑ 34% vs last week</div>
+      </div>
+    </div>
+    <div class="farmer-main" id="farmerMain"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-amount" id="modalAmount"></div>
+    <div class="modal-detail" id="modalDetail"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" id="modalConfirm">Confirm Bid</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const AUCTIONS = [
+  { id:1, emoji:'🍅', name:'Nkosi Family Farm', location:'Bronkhorstspruit', desc:'12kg mixed tomatoes — picked this morning', tags:['organic','no middleman'], color:'#fef3c7', bid:68, retail:140, bids:4, secs:462, bidders:['Thandi M.','Amahle S.','Priya D.','Lungelo K.'], locs:['Tembisa','Soweto','Midrand','Mamelodi'], avColors:['#e8f5ee','#fef3c7','#eef2ff','#fce7f3'], avText:['#085041','#633806','#3730a3','#9d174d'] },
+  { id:2, emoji:'🥬', name:'Sithole Greens', location:'Bapsfontein', desc:'8kg fresh spinach — certified organic', tags:['organic','bulk available'], color:'#d1fae5', bid:42, retail:88, bids:6, secs:183, bidders:['Sipho M.','Rethabile N.'], locs:['Alex','Pretoria'], avColors:['#fef3c7','#eef2ff'], avText:['#633806','#3730a3'] },
+  { id:3, emoji:'🎃', name:'Mahlangu Farm', location:'Cullinan', desc:'15kg butternut squash — great for winter', tags:['bulk','seasonal'], color:'#ffedd5', bid:95, retail:180, bids:2, secs:1140, bidders:['Nokwanda D.'], locs:['Centurion'], avColors:['#eef2ff'], avText:['#3730a3'] },
+  { id:4, emoji:'🌽', name:'Dlamini Crops', location:'Heidelberg', desc:'20 cobs sweet corn — harvested at 5am', tags:['fresh today','no middleman'], color:'#fef9c3', bid:55, retail:100, bids:3, secs:728, bidders:['Zanele T.','Bongani K.','Tumi P.'], locs:['Germiston','Vosloorus','Springs'], avColors:['#d1fae5','#fef3c7','#fce7f3'], avText:['#065f46','#633806','#9d174d'] },
+  { id:5, emoji:'🥕', name:'Pretorius Organics', location:'Randfontein', desc:'10kg baby carrots — triple-washed, ready to eat', tags:['organic','kids favourite'], color:'#fed7aa', bid:78, retail:130, bids:5, secs:340, bidders:['Liesl V.','Nomsa D.'], locs:['Krugersdorp','Soweto'], avColors:['#e8f5ee','#fef3c7'], avText:['#085041','#633806'] },
+  { id:6, emoji:'🥦', name:'Green Valley Farm', location:'Rayton', desc:'6 heads broccoli — nutrient-dense, frost-grown', tags:['organic','limited'], color:'#d1fae5', bid:36, retail:72, bids:1, secs:2400, bidders:['Arjun P.'], locs:['Sandton'], avColors:['#eef2ff'], avText:['#3730a3'] },
+];
+
+let selectedAuction = null;
+let myBid = 0;
+let isWinning = false;
+let bidTimerInt = null;
+let auctionTimers = {};
+
+const avColors = ['#e8f5ee','#fef3c7','#eef2ff','#fce7f3','#fee2e2','#d1fae5'];
+const avText   = ['#085041','#633806','#3730a3','#9d174d','#991b1b','#065f46'];
+
+// ── UTILS ──
+function fmtTime(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+}
+function showToast(msg, dur=3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ── SCREEN SWITCH ──
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['onboard','consumer','farmer'][i] === id);
+  });
+  if(id === 'consumer') renderAuctions();
+  if(id === 'farmer') renderFarmerDashboard();
+}
+
+// ── AUCTION TIMERS ──
+function startTimers() {
+  setInterval(() => {
+    AUCTIONS.forEach(a => {
+      if(a.secs > 0) {
+        a.secs--;
+        const timerEl = document.getElementById('timer-'+a.id);
+        if(timerEl) {
+          timerEl.textContent = fmtTime(a.secs);
+          timerEl.className = 'card-timer-badge' + (a.secs < 300 ? ' urgent' : '');
+        }
+        const lrTimer = document.getElementById('lr-timer-'+a.id);
+        if(lrTimer) {
+          lrTimer.textContent = fmtTime(a.secs);
+          lrTimer.className = 'lr-timer' + (a.secs < 300 ? ' urgent' : '');
+        }
+      }
+    });
+    if(selectedAuction) updateBidPanelTimer();
+    // Random bid simulation
+    if(Math.random() < 0.015) simulateRandomBid();
+  }, 1000);
+}
+
+// ── RENDER AUCTIONS ──
+function renderAuctions() {
+  const grid = document.getElementById('auctionGrid');
+  grid.innerHTML = AUCTIONS.map(a => `
+    <div class="auction-card ${selectedAuction?.id===a.id?'selected':''}" id="acard-${a.id}" onclick="selectAuction(${a.id})">
+      <div class="card-img" style="background:${a.color}">
+        <span>${a.emoji}</span>
+        <div class="card-img-overlay"></div>
+        <div class="card-timer-badge ${a.secs<300?'urgent':''}" id="timer-${a.id}">${fmtTime(a.secs)}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-farm">${a.name}</div>
+        <div class="card-detail">📍 ${a.location} · ${a.desc}</div>
+        <div class="card-tags">${a.tags.map(t=>`<span class="tag tag-green">${t}</span>`).join('')}<span class="tag tag-red">${a.bids} bidding</span></div>
+        <div class="card-price-row">
+          <div>
+            <div class="card-bid-label">Current bid</div>
+            <div class="card-bid-amount" id="cbid-${a.id}">R${a.bid}</div>
+            <div class="card-bid-count" id="cbidcount-${a.id}">${a.bids} bids · retail <span style="text-decoration:line-through">R${a.retail}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── SELECT AUCTION ──
+function selectAuction(id) {
+  selectedAuction = AUCTIONS.find(a => a.id === id);
+  myBid = selectedAuction.bid;
+  isWinning = false;
+  document.querySelectorAll('.auction-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('acard-'+id).classList.add('selected');
+  document.getElementById('bidPanelEmpty').style.display = 'none';
+  document.getElementById('bidPanelContent').style.display = 'flex';
+  renderBidPanel();
+}
+
+// ── BID PANEL ──
+function renderBidPanel() {
+  const a = selectedAuction;
+  const saving = Math.round(100 - (myBid/a.retail*100));
+  const pct = Math.round(100 - (a.secs / getMaxSecs(a) * 100));
+
+  document.getElementById('bidPanelContent').innerHTML = `
+    <div class="bid-item-header">
+      <div style="font-size:40px">${a.emoji}</div>
+      <div>
+        <div class="bid-item-title">${a.name}</div>
+        <div class="bid-item-sub">📍 ${a.location} · ${a.desc}</div>
+      </div>
+    </div>
+    <div class="bid-timer-block">
+      <div>
+        <div class="bid-timer-label">Time remaining</div>
+        <div class="bid-timer-val" id="panel-timer">${fmtTime(a.secs)}</div>
+        <div class="bid-progress"><div class="bid-progress-fill" id="panel-progress" style="width:${pct}%"></div></div>
+      </div>
+      <div style="text-align:right">
+        <div class="bid-timer-label">Bids</div>
+        <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--white);" id="panel-bidcount">${a.bids}</div>
+      </div>
+    </div>
+    <div class="bid-price-section">
+      <div class="bid-current-label">Your bid</div>
+      <div class="bid-current" id="panel-bid">R${myBid}</div>
+      <div class="bid-retail">Retail: <span style="text-decoration:line-through">R${a.retail}</span></div>
+      <div class="bid-saving" id="panel-saving">You save ${saving}% vs supermarket</div>
+    </div>
+    <div class="bid-buttons">
+      <button class="bid-inc-btn" onclick="incBid(5)">+R5</button>
+      <button class="bid-inc-btn" onclick="incBid(10)">+R10</button>
+      <button class="bid-inc-btn" onclick="incBid(20)">+R20</button>
+    </div>
+    <button class="bid-main-btn ${isWinning?'winning':''}" id="bidMainBtn" onclick="openBidModal()">
+      ${isWinning ? '🏆 You\'re winning!' : 'Place Bid — R'+myBid}
+    </button>
+    <div>
+      <div class="bid-feed-title" style="margin-bottom:8px">Live bid feed</div>
+      <div class="bid-feed" id="bidFeed">
+        ${a.bidders.map((b,i) => `
+          <div class="bid-feed-row" id="bfr-${i}">
+            <div class="bfr-av" style="background:${a.avColors[i]};color:${a.avText[i]}">${b.split(' ').map(w=>w[0]).join('')}</div>
+            <div class="bfr-info">
+              <div class="bfr-name">${b}</div>
+              <div class="bfr-loc">${a.locs[i]} · ${(i===0?'2s':(i===1?'14s':(i===2?'31s':'1m')))} ago</div>
+            </div>
+            <div class="bfr-amt">R${a.bid - (i*8)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function updateBidPanelTimer() {
+  const a = selectedAuction;
+  const timerEl = document.getElementById('panel-timer');
+  const progEl = document.getElementById('panel-progress');
+  if(timerEl) timerEl.textContent = fmtTime(a.secs);
+  if(progEl) {
+    const pct = Math.round(100 - (a.secs / getMaxSecs(a) * 100));
+    progEl.style.width = Math.min(100,pct) + '%';
+  }
+}
+
+function getMaxSecs(a) {
+  if(a.secs > 1800) return 3600;
+  if(a.secs > 600) return 1800;
+  return 900;
+}
+
+function incBid(amount) {
+  if(!selectedAuction) return;
+  myBid += amount;
+  selectedAuction.bid = myBid;
+  const bidEl = document.getElementById('panel-bid');
+  const btnEl = document.getElementById('bidMainBtn');
+  const savEl = document.getElementById('panel-saving');
+  const saving = Math.round(100 - (myBid/selectedAuction.retail*100));
+  if(bidEl) { bidEl.textContent = 'R'+myBid; bidEl.style.animation='none'; void bidEl.offsetWidth; bidEl.style.animation='fadeIn 0.3s ease'; }
+  if(btnEl) btnEl.textContent = isWinning ? '🏆 You\'re winning!' : 'Place Bid — R'+myBid;
+  if(savEl) savEl.textContent = `You save ${saving}% vs supermarket`;
+  const cbid = document.getElementById('cbid-'+selectedAuction.id);
+  if(cbid) cbid.textContent = 'R'+myBid;
+}
+
+function simulateRandomBid() {
+  const a = AUCTIONS[Math.floor(Math.random()*AUCTIONS.length)];
+  a.bid += Math.floor(Math.random()*3+1)*5;
+  a.bids++;
+  const cbid = document.getElementById('cbid-'+a.id);
+  const cbidcount = document.getElementById('cbidcount-'+a.id);
+  if(cbid) { cbid.textContent = 'R'+a.bid; cbid.style.color='var(--green)'; setTimeout(()=>cbid.style.color='', 1000); }
+  if(cbidcount) cbidcount.innerHTML = `${a.bids} bids · retail <span style="text-decoration:line-through">R${a.retail}</span>`;
+  if(selectedAuction?.id === a.id && !isWinning) {
+    const bidcount = document.getElementById('panel-bidcount');
+    if(bidcount) bidcount.textContent = a.bids;
+    const names = ['Sipho M.','Zanele K.','Priya N.','Bongani T.','Liesl V.','Nomsa P.'];
+    const locs = ['Soweto','Tembisa','Midrand','Alex','Krugersdorp','Pretoria'];
+    const ri = Math.floor(Math.random()*names.length);
+    const feed = document.getElementById('bidFeed');
+    if(feed) {
+      const row = document.createElement('div');
+      row.className = 'bid-feed-row new-bid';
+      const ci = Math.floor(Math.random()*avColors.length);
+      row.innerHTML = `
+        <div class="bfr-av" style="background:${avColors[ci]};color:${avText[ci]}">${names[ri].split(' ').map(w=>w[0]).join('')}</div>
+        <div style="flex:1"><div class="bfr-name">${names[ri]}</div><div class="bfr-loc">${locs[ri]} · just now</div></div>
+        <div class="bfr-amt">R${a.bid}</div>
+      `;
+      feed.insertBefore(row, feed.firstChild);
+      if(feed.children.length > 5) feed.removeChild(feed.lastChild);
+    }
+    showToast(`💬 ${names[ri]} just bid R${a.bid} on ${a.emoji} ${a.name}`);
+  }
+}
+
+// ── BID MODAL ──
+function openBidModal() {
+  if(!selectedAuction) return;
+  const a = selectedAuction;
+  const saving = Math.round(100 - (myBid/a.retail*100));
+  document.getElementById('modalTitle').textContent = 'Confirm your bid';
+  document.getElementById('modalSub').textContent = `${a.emoji} ${a.desc} from ${a.name}, ${a.location}`;
+  document.getElementById('modalAmount').textContent = 'R'+myBid;
+  document.getElementById('modalDetail').textContent = `You save R${a.retail - myBid} (${saving}%) vs retail price of R${a.retail}`;
+  document.getElementById('modalConfirm').onclick = confirmBid;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function confirmBid() {
+  closeModal();
+  isWinning = true;
+  selectedAuction.bids++;
+  const btnEl = document.getElementById('bidMainBtn');
+  if(btnEl) { btnEl.textContent = '🏆 You\'re winning!'; btnEl.classList.add('winning'); }
+  const feed = document.getElementById('bidFeed');
+  if(feed) {
+    const row = document.createElement('div');
+    row.className = 'bid-feed-row new-bid bfr-you';
+    row.innerHTML = `
+      <div class="bfr-av" style="background:#1a7a4a;color:#fff">TM</div>
+      <div style="flex:1"><div class="bfr-name">You 🏆</div><div class="bfr-loc">just now · highest bidder</div></div>
+      <div class="bfr-amt" style="color:var(--green-dark)">R${myBid}</div>
+    `;
+    feed.insertBefore(row, feed.firstChild);
+    if(feed.children.length > 5) feed.removeChild(feed.lastChild);
+  }
+  showToast(`🏆 You're winning! R${myBid} on ${selectedAuction.emoji} ${selectedAuction.name}`, 4000);
+}
+
+// ── FILTERS ──
+function toggleFilter(el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── FARMER ──
+let farmerSection = 'dashboard';
+function farmerTab(tab, el) {
+  farmerSection = tab;
+  document.querySelectorAll('.fsb-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  renderFarmerSection();
+}
+
+function renderFarmerDashboard() { renderFarmerSection(); }
+
+function renderFarmerSection() {
+  const main = document.getElementById('farmerMain');
+  if(farmerSection === 'dashboard') main.innerHTML = buildDashboard();
+  if(farmerSection === 'post') main.innerHTML = buildPost();
+  if(farmerSection === 'active') main.innerHTML = buildActive();
+  if(farmerSection === 'history') main.innerHTML = buildHistory();
+}
+
+function buildDashboard() {
+  return `
+    <div class="metric-row">
+      <div class="metric-card"><div class="mc-icon">💰</div><div class="mc-label">This week</div><div class="mc-val">R1,840</div><div class="mc-sub">↑ 34% vs last week</div></div>
+      <div class="metric-card"><div class="mc-icon">🔨</div><div class="mc-label">Auctions won</div><div class="mc-val">11</div><div class="mc-sub">3 live right now</div></div>
+      <div class="metric-card"><div class="mc-icon">⚡</div><div class="mc-label">Avg time to sell</div><div class="mc-val">18m</div><div class="mc-sub">vs 2 days before</div></div>
+      <div class="metric-card"><div class="mc-icon">⭐</div><div class="mc-label">Buyer rating</div><div class="mc-val">4.9</div><div class="mc-sub">From 47 reviews</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card-panel">
+        <div class="cp-title">Earnings this month</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${[['Mon','R320'],['Tue','R480'],['Wed','R210'],['Thu','R590'],['Fri','R840'],['Today','R1,840']].map(([d,v]) => `
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;font-size:11px;color:var(--ink4);font-weight:500;">${d}</div>
+              <div style="flex:1;height:28px;background:var(--green-faint);border-radius:6px;overflow:hidden;">
+                <div style="height:100%;background:var(--green-dark);border-radius:6px;width:${Math.round(parseInt(v.replace(/[^0-9]/g,''))/20)}%;transition:width 1s;min-width:4px;"></div>
+              </div>
+              <div style="width:60px;text-align:right;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--green-dark);">${v}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card-panel">
+          <div class="cp-title">Quick post</div>
+          <p style="font-size:13px;color:var(--ink3);margin-bottom:12px;">Harvested something fresh? Post it live in 30 seconds.</p>
+          <button class="go-live-btn" style="margin-top:0;" onclick="farmerTab('post', document.querySelectorAll('.fsb-item')[1])">Post a Harvest →</button>
+        </div>
+        <div class="card-panel">
+          <div class="cp-title">Top performing produce</div>
+          ${[['🍅','Tomatoes','R68 avg bid','12 sold'],['🥬','Spinach','R42 avg bid','8 sold'],['🌽','Sweet Corn','R55 avg bid','6 sold']].map(([e,n,b,s]) => `
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+              <div style="font-size:24px;">${e}</div>
+              <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink);">${n}</div><div style="font-size:11px;color:var(--ink3);">${s}</div></div>
+              <div style="font-size:13px;font-weight:700;color:var(--green-dark);font-family:'Syne',sans-serif;">${b}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+const PRODUCE = [
+  {e:'🍅',n:'Tomatoes'},{e:'🥬',n:'Spinach'},{e:'🌽',n:'Corn'},{e:'🎃',n:'Butternut'},
+  {e:'🥕',n:'Carrots'},{e:'🥦',n:'Broccoli'},{e:'🧅',n:'Onions'},{e:'🥔',n:'Potatoes'},
+  {e:'🫑',n:'Peppers'},{e:'🍆',n:'Brinjal'},{e:'🌿',n:'Herbs'},{e:'🍋',n:'Lemons'},
+  {e:'🥭',n:'Mangoes'},{e:'🍓',n:'Berries'},{e:'🫛',n:'Peas'},{e:'🌰',n:'Nuts'},
+  {e:'🍠',n:'Sweet pot'},{e:'🥒',n:'Cucumber'},{e:'🧄',n:'Garlic'},{e:'🌶️',n:'Chilli'}
+];
+let selProduce = 0, selWindow = '30min';
+
+function buildPost() {
+  return `
+    <div style="max-width:640px;">
+      <div style="margin-bottom:24px;"><div class="panel-title">Post a Harvest</div><div class="panel-sub">Goes live instantly — buyers will be notified immediately</div></div>
+      <div class="card-panel">
+        <div class="form-group">
+          <label class="form-label">What are you selling today?</label>
+          <div class="produce-grid" id="produceGrid">
+            ${PRODUCE.map((p,i) => `
+              <div class="produce-item ${i===selProduce?'sel':''}" onclick="selectProduce(${i})">
+                <div class="produce-emoji">${p.e}</div>
+                <div class="produce-name">${p.n}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Describe your harvest</label>
+          <input class="form-input" type="text" placeholder="e.g. 12kg fresh tomatoes, picked this morning" id="listingDesc">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Minimum price you'll accept (reserve)</label>
+          <div class="range-row">
+            <input class="form-range" type="range" min="10" max="300" step="5" value="45" oninput="document.getElementById('rval').textContent='R'+this.value">
+            <div class="range-val" id="rval">R45</div>
+          </div>
+          <div style="font-size:11px;color:var(--ink4);margin-top:4px;">Bidding starts here. You'll always earn at least this amount.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Auction window</label>
+          <div class="window-row">
+            ${['15 min','30 min','1 hour','2 hours'].map((w,i) => `
+              <button class="window-btn ${w==='30 min'?'sel':''}" onclick="selectWindow(this,'${w}')">${w}</button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pickup / delivery notes</label>
+          <input class="form-input" type="text" placeholder="e.g. Farm gate pickup, or nearest Pargo point is Bronkhorstspruit Mall" id="pickupNote">
+        </div>
+        <button class="go-live-btn" onclick="goLive()">🔥 Go Live Now</button>
+        <div class="success-toast" id="successToast">✅ Your listing is live! 3 buyers in your area have been notified. Check Active Listings to track bids.</div>
+      </div>
+    </div>
+  `;
+}
+
+function selectProduce(i) {
+  selProduce = i;
+  document.querySelectorAll('.produce-item').forEach((el,j) => el.classList.toggle('sel', i===j));
+}
+function selectWindow(el, w) {
+  selWindow = w;
+  document.querySelectorAll('.window-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function goLive() {
+  const toast = document.getElementById('successToast');
+  if(toast) { toast.style.display = 'block'; }
+  showToast('🔥 Your listing is live! Buyers are being notified.', 4000);
+  setTimeout(() => { farmerTab('active', document.querySelectorAll('.fsb-item')[2]); }, 2000);
+}
+
+function buildActive() {
+  return `
+    <div style="max-width:700px;">
+      <div style="margin-bottom:24px;"><div class="panel-title">Active Listings</div><div class="panel-sub">3 auctions running · Updated live</div></div>
+      <div class="card-panel">
+        ${[
+          {e:'🍅',name:'Mixed Tomatoes (12kg)',sub:'Nkosi Family Farm · Bronkhorstspruit',bid:'R68',bids:4,secs:462},
+          {e:'🌽',name:'Sweet Corn (20 cobs)',sub:'Nkosi Family Farm · Bronkhorstspruit',bid:'R55',bids:3,secs:728},
+          {e:'🥬',name:'Spinach Bundle (8kg)',sub:'Nkosi Family Farm · Bronkhorstspruit',bid:'R42',bids:6,secs:183},
+        ].map((l,i) => `
+          <div class="listing-row">
+            <div class="lr-emoji">${l.e}</div>
+            <div class="lr-info">
+              <div class="lr-title">${l.name}</div>
+              <div class="lr-sub">${l.sub}</div>
+              <div class="lr-bids">${l.bids} active bids</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="lr-timer ${l.secs<300?'urgent':''}" id="lr-timer-fake-${i}">${fmtTime(l.secs)}</div>
+              <div class="lr-price">${l.bid}</div>
+              <div style="font-size:10px;color:var(--green);margin-top:2px;">current bid</div>
+            </div>
+          </div>
+        `).join('')}
+        <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:13px;color:var(--ink3);">Total current value</div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--green-dark);">R165</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function buildHistory() {
+  const rows = [
+    ['🍅','Tomatoes 10kg','R124','8','17 min','Sold'],
+    ['🥬','Spinach 6kg','R78','5','22 min','Sold'],
+    ['🌽','Sweet Corn 15 cobs','R92','3','31 min','Sold'],
+    ['🎃','Butternut 8kg','R88','2','44 min','Sold'],
+    ['🥕','Baby Carrots 5kg','R65','4','19 min','Sold'],
+    ['🌽','Corn (bulk 30 cobs)','R185','6','12 min','Sold'],
+    ['🍅','Cherry Tomatoes','R55','-','-','Live 🔴'],
+  ];
+  return `
+    <div style="max-width:700px;">
+      <div style="margin-bottom:24px;"><div class="panel-title">Sales History</div><div class="panel-sub">Total earned all-time: R4,280 · 0% middleman cut</div></div>
+      <div class="card-panel" style="padding:0;overflow:hidden;">
+        <table class="history-table">
+          <thead><tr><th>Produce</th><th>Final price</th><th>Bids</th><th>Time to sell</th><th>Status</th></tr></thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r[0]} ${r[1]}</td>
+                <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--green-dark);">${r[2]}</td>
+                <td>${r[3]}</td>
+                <td>${r[4]}</td>
+                <td><span class="${r[5].includes('Live')?'status-live':'status-sold'}">${r[5]}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ── INIT ──
+renderAuctions();
+startTimers();
+
+// Countdown for active listing timers
+setInterval(() => {
+  [0,1,2].forEach((i, idx) => {
+    const secs = [462, 728, 183][i];
+    const el = document.getElementById('lr-timer-fake-'+i);
+    if(el) {
+      const newSecs = Math.max(0, secs - Math.floor(Date.now()/1000 % 3600));
+      el.textContent = fmtTime(newSecs);
+    }
+  });
+}, 1000);
+</script>
+</body>
+</html>
