@@ -34,6 +34,7 @@
 
             font-family:'DM Sans', sans-serif;
             overflow:hidden;
+            padding:20px;
         }
 
         .login-card{
@@ -138,6 +139,23 @@
             font-size:14px;
         }
 
+        .create-account{
+            margin-top:20px;
+            text-align:center;
+            font-size:14px;
+            color:#6b7280;
+        }
+
+        .create-account a{
+            color:#16a34a;
+            font-weight:700;
+            text-decoration:none;
+        }
+
+        .create-account a:hover{
+            text-decoration:underline;
+        }
+
         .leaf{
             position:absolute;
             font-size:120px;
@@ -188,6 +206,11 @@
             </button>
 
         </form>
+
+        <div class="create-account">
+            Don’t have an account?
+            <a href="register.php">Create Account</a>
+        </div>
 
         <div class="bottom-text">
             Fresh produce. Smart auctions. Better farming.
